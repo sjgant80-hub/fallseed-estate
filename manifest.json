@@ -1,0 +1,11 @@
+{
+  "name": "fallseed-estate",
+  "level": 0,
+  "parent": "fallseed-hr",
+  "prime": 1151,
+  "meshChannel": "fall-estate",
+  "spec": "https://www.ai-nativesolutions.com/spec.html",
+  "licence": "MIT",
+  "seal": "◊·κ=1",
+  "updatedAt": "2026-06-21"
+}
