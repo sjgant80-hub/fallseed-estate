@@ -159,22 +159,19 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1200px;margin:0 auto;width
     'llama-3b':  { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC',   size: '~2GB',   label: '3B · balanced · default · most laptops' },
     'qwen-7b':   { id: 'Qwen2.5-7B-Instruct-q4f16_1-MLC',     size: '~5GB',   label: '7B · capable · needs decent GPU (M-series Mac / 8GB+ VRAM)' },
     'llama-8b':  { id: 'Llama-3.1-8B-Instruct-q4f16_1-MLC',   size: '~5GB',   label: '8B · common · needs decent GPU' },
-    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' },
-  };
+    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' }};
   const DEFAULT_MODEL = 'llama-3b';
 
   const T3_PROVIDERS = {
     anthropic: { label: 'Anthropic Claude', models: ['claude-sonnet-4-5','claude-opus-4-7','claude-haiku-4-5'], default: 'claude-sonnet-4-5', url: 'https://api.anthropic.com/v1/messages' },
     openai:    { label: 'OpenAI',           models: ['gpt-4o','gpt-4o-mini','o1-mini'],                          default: 'gpt-4o-mini',      url: 'https://api.openai.com/v1/chat/completions' },
-    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' },
-  };
+    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' }};
 
   // ─── State ───────────────────────────────────────────────────────
   const STATE = {
     config: loadConfig(),
     ai: { ready: false, loading: false, progress: 0, engine: null, model: null },
-    mesh: { active: false, peers: new Map(), bc: null, signal: null },
-  };
+    mesh: { active: false, peers: new Map(), bc: null, signal: null }};
 
   function loadConfig() {
     try { return JSON.parse(localStorage.getItem('fall-kit.config') || '{}'); }
@@ -241,8 +238,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1200px;margin:0 auto;width
     if (tier === 'T2' && STATE.ai.ready && STATE.ai.engine) {
       const r = await STATE.ai.engine.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userMsg }],
-        max_tokens: maxTokens,
-      });
+        max_tokens: maxTokens});
       return r.choices[0].message.content;
     }
     if (tier === 'T3' && STATE.config.api_key && STATE.config.api_provider) {
@@ -259,8 +255,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1200px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.anthropic.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('Anthropic ' + r.status + ': ' + (await r.text()).slice(0, 200));
       const j = await r.json();
       return j.content[0].text;
@@ -269,8 +264,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1200px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.openai.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('OpenAI ' + r.status);
       const j = await r.json();
       return j.choices[0].message.content;
@@ -279,8 +273,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1200px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.google.url + model + ':generateContent?key=' + encodeURIComponent(key), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } }),
-      });
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } })});
       if (!r.ok) throw new Error('Google ' + r.status);
       const j = await r.json();
       return j.candidates[0].content.parts[0].text;
@@ -521,8 +514,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1200px;margin:0 auto;width
     openMint: openMint,  // v1.2 · launch kcc-mint with this seed prefilled as parent
     MODELS: WEBLLM_MODELS,
     PROVIDERS: T3_PROVIDERS,
-    state: STATE,
-  };
+    state: STATE};
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -587,18 +579,18 @@ const SEED_DEFAULT = {
  purpose: 'Workflow · diary · reconciliation · CMP · redress scheme + ombudsman log · file reviews · property file audit · KPI tracker' }
  ],
  t0Rules: [
- { pattern: 'aml|mlr|hmrc supervision', answer: 'AML / MLR 2017: estate agency business in scope since June 2017; supervisor HMRC. CDD on BOTH buyer and seller for transactions £10,000+. Letting agents in scope where monthly rent ≥ €10,000 / approx £8,400.' },
+ { pattern: 'aml|mlr|hmrc supervision', answer: 'AML / MLR 2017: estate agency business in scope since June 2017; supervisor HMRC. CDD on BOTH buyer and seller for transactions TBA+. Letting agents in scope where monthly rent ≥ €10,000 / approx TBA.' },
  { pattern: 'deposit|tdp|tds|dps|mydeposits', answer: 'Tenancy deposit protection (Housing Act 2004 ss.212-215, Sch.10): protect within 30 days in an authorised scheme (TDS / DPS / MyDeposits); serve Prescribed Information within 30 days. Failure: 1-3 x deposit penalty + no S.21.' },
  { pattern: 's\\.?21|section 21', answer: 'Section 21 Housing Act 1988 — no-fault notice. 2 months minimum. Cannot serve if deposit unprotected, no Prescribed Information, no EPC, no Gas Safety Record (at start), no How to Rent guide. Repealed by Renters’ Rights Act 2024 (commencement TBA).' },
  { pattern: 's\\.?8|section 8|grounds', answer: 'Section 8 Housing Act 1988 — fault-based grounds. Mandatory (1-8) + discretionary (9-17). Notice periods vary (2 weeks ground 14; 2 months ground 1; 4 weeks ground 8).' },
  { pattern: 's\\.?13|rent increase', answer: 'Section 13 Housing Act 1988 — rent increase. 1 month notice (periodic AST). Tenant can challenge at First-tier Tribunal (Property Chamber).' },
- { pattern: 'cmp|client money protection', answer: 'CMP (Client Money Protection): mandatory for letting / managing agents in England since 1 Apr 2019. Membership of govt-approved scheme (e.g. ARLA, NALS, RICS, UKALA). £5,000 penalty + repeat £30k.' },
- { pattern: 'right to rent|immigration', answer: 'Right to Rent (Immigration Act 2014): pre-tenancy immigration status check. £80 first / £500 repeat per illegal occupant civil penalty; £20,000 increase Feb 2024.' },
- { pattern: 'epc|mees', answer: 'EPC (Energy Performance of Buildings Regs 2012): minimum E rating MEES (since 1 Apr 2018 new tenancies; 1 Apr 2020 all). Proposed C from 2030. £5,000 penalty / breach.' },
- { pattern: 'redress|tpo|prs', answer: 'Estate agent redress: mandatory membership of TPO, Property Redress Scheme, or Ombudsman Services (Consumer Estate Agents and Redress Act 2007 + Enterprise & Regulatory Reform Act 2013). £5,000 penalty if not.' },
+ { pattern: 'cmp|client money protection', answer: 'CMP (Client Money Protection): mandatory for letting / managing agents in England since 1 Apr 2019. Membership of govt-approved scheme (e.g. ARLA, NALS, RICS, UKALA). TBA penalty + repeat TBAk.' },
+ { pattern: 'right to rent|immigration', answer: 'Right to Rent (Immigration Act 2014): pre-tenancy immigration status check. TBA first / TBA repeat per illegal occupant civil penalty; TBA increase Feb 2024.' },
+ { pattern: 'epc|mees', answer: 'EPC (Energy Performance of Buildings Regs 2012): minimum E rating MEES (since 1 Apr 2018 new tenancies; 1 Apr 2020 all). Proposed C from 2030. TBA penalty / breach.' },
+ { pattern: 'redress|tpo|prs', answer: 'Estate agent redress: mandatory membership of TPO, Property Redress Scheme, or Ombudsman Services (Consumer Estate Agents and Redress Act 2007 + Enterprise & Regulatory Reform Act 2013). TBA penalty if not.' },
  { pattern: 'gas safety|cp12', answer: 'Gas Safety (Installation and Use) Regulations 1998: annual landlord gas safety check; copy (CP12) to tenant within 28 days; before new tenant moves in.' },
  { pattern: 'how to rent|ehl', answer: 'How to Rent guide: must be provided at start of every new AST in England (Deregulation Act 2015 s.38; AT Prescribed Information Regs 2015). No S.21 without it.' },
- { pattern: 'electrical|eicr', answer: 'Electrical Safety Standards in the Private Rented Sector (England) Regs 2020: EICR every 5 years. New tenancies from 1 Jul 2020; existing from 1 Apr 2021. £30,000 max penalty.' }
+ { pattern: 'electrical|eicr', answer: 'Electrical Safety Standards in the Private Rented Sector (England) Regs 2020: EICR every 5 years. New tenancies from 1 Jul 2020; existing from 1 Apr 2021. TBA max penalty.' }
  ],
  complianceItems: [
  'HMRC AML supervision (or signed up to letting threshold check)',
@@ -694,7 +686,7 @@ const PROVIDERS = [
  model: 'claude-sonnet-4-20250514', requiresKey: true, paid: true, defaultEnabled: false, supportsStream: true,
  pricePer1MIn: 3, pricePer1MOut: 15,
  signupUrl: 'https://console.anthropic.com/',
- note: 'Sonnet 4: ~£0.03/tool · highest quality codegen' }
+ note: 'Sonnet 4: ~TBA/tool · highest quality codegen' }
 ];
 
 // ═══════════════════════════════════════════════════════════════
